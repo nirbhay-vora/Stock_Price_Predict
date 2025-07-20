@@ -2,7 +2,7 @@ name: Stock Prediction Automation
 
 on:
   schedule:
-    - cron: '30 4 * * *'  # Runs every day at 10:00 AM IST
+    - cron: '30 2 * * *'  # Runs every day at 10:00 AM IST
   workflow_dispatch:      # Allows manual trigger
 
 jobs:
