@@ -27,8 +27,11 @@ def get_last_valid(series, fallback):
 # --- Configuration ---
 symbols = ['NFL.NS', 'IREDA.NS']
 bot_token = os.getenv('BOT_TOKEN')
+print("bot_token", bot_token)
 chat_id = os.getenv('CHAT_ID')
-NEWS_API_KEY = os.getenv('NEWS_API_KEY', 'your_news_api_key_here')
+print("chat_id", chat_id)
+NEWS_API_KEY = os.getenv('NEWS_API_KEY')
+print("NEWS_API_KEY", NEWS_API_KEY)
 
 # File to store hourly price data
 PRICE_HISTORY_FILE = 'hourly_price_history.json'
@@ -285,13 +288,16 @@ def predict_with_mindset(symbol, price_data, mindset_data, news_data):
         print("DEBUG: price_momentum_val", price_momentum_val, type(price_momentum_val))
         print("DEBUG: volume_ratio", volume_ratio, type(volume_ratio))
         print("DEBUG: features", features)
-        
+        # Use the time of the latest price in the intraday data
+        prediction_time = price_data['current_time']
+
         return {
             'predicted_price': predicted_price,
             'confidence': confidence,
             'mindset_adjustment': mindset_adjustment,
             'news_adjustment': news_adjustment,
-            'momentum_adjustment': momentum_adjustment
+            'momentum_adjustment': momentum_adjustment,
+            'prediction_time': prediction_time.strftime('%Y-%m-%d %H:%M:%S IST') if hasattr(prediction_time, 'strftime') else str(prediction_time)
         }
     
     except Exception as e:
@@ -336,6 +342,8 @@ def send_hourly_update(all_data):
             
             if prediction:
                 summary_lines.append(f"🎯 Predicted: ₹{prediction['predicted_price']:.2f}")
+                summary_lines.append(f"🕒 Prediction Time: {prediction['prediction_time']}")
+
                 summary_lines.append(f"🎯 Confidence: {prediction['confidence']:.1%}")
     
     summary_message = "\n".join(summary_lines)
