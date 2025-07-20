@@ -6,8 +6,6 @@ from sklearn.model_selection import train_test_split
 import datetime
 import os
 import requests
-from dotenv import load_dotenv
-load_dotenv()
 
 symbols = ['NFL.NS', 'IREDA.NS']
 
