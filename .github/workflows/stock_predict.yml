@@ -1,0 +1,29 @@
+name: Stock Prediction Automation
+
+on:
+  schedule:
+    - cron: '30 4 * * *'  # Runs every day at 10:00 AM IST
+  workflow_dispatch:      # Allows manual trigger
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run script
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          python fetch_and_predict_latest.py
